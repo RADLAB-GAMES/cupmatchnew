@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public GameState State;
     public static event Action<GameState> OnGameStateChange;
+    public int level;
     public int moves;
     public bool coolOff = false;
     public List<GameObject> clickedOn = new();
@@ -28,7 +29,8 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        // TODO: Replace this with something like playerprefs to continue where the player left off
+        level = 1;
     }
 
     // Update is called once per frame
