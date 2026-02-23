@@ -2,15 +2,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.Rendering;
-
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
     TextMeshProUGUI moves;
     [SerializeField]
     TextMeshProUGUI amountCorrect;
+    [SerializeField]
+    TextMeshProUGUI starRating;
 
 
     void Awake()
@@ -38,8 +37,8 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.coolOff = false;
         GameManager.Instance.moves = 0;
         GameManager.Instance.correctMatches = 0;
+        GameManager.Instance.cupCount = 0;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        
     }
 
     void ShowScore(GameState state)
@@ -52,7 +51,17 @@ public class UIManager : MonoBehaviour
         else if (state == GameState.Win)
         {
             moves.text = "You Won in " + GameManager.Instance.moves + " moves!";
+            DisplayStarRating();
         }
+    }
+
+    void DisplayStarRating()
+    {
+        if (starRating == null) return;
+
+        int stars = GameManager.Instance.CalculateStarRating();
+        starRating.enabled = true;
+        starRating.text = new string('★', stars) + new string('☆', 3 - stars);
     }
 
     public void StartGame()
