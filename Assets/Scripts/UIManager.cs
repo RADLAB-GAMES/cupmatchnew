@@ -9,6 +9,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI amountCorrect;
     [SerializeField]
+    GameObject cont;
+    [SerializeField]
     TextMeshProUGUI starRating;
 
 
@@ -19,7 +21,8 @@ public class UIManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        // hide continue button until win state
+        cont.SetActive(false);
     }
 
     void ODestroy()
@@ -41,6 +44,17 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void ContinueUpdate()
+    {
+        // TODO: Need a way to change levels difficulty according to level number 
+        // if GameManager.Instance.level < 4 3 cups...
+        GameManager.Instance.level++;
+        GameManager.Instance.coolOff = false;
+        GameManager.Instance.moves = 0;
+        GameManager.Instance.correctMatches = 0;
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+    }
+
     void ShowScore(GameState state)
     {
         // update score after swap switches back to trying
@@ -50,6 +64,8 @@ public class UIManager : MonoBehaviour
         }
         else if (state == GameState.Win)
         {
+            // show continue button
+            cont.SetActive(true);
             moves.text = "You Won in " + GameManager.Instance.moves + " moves!";
             DisplayStarRating();
         }
