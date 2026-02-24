@@ -12,6 +12,25 @@ public class GameManager : MonoBehaviour
     public bool coolOff = false;
     public List<GameObject> clickedOn = new();
     public int correctMatches = 0;
+    public int cupCount = 0;
+
+    /// <summary>
+    /// Calculates star rating based on moves and cup count.
+    /// 3 stars: moves <= cupCount (perfect/near-perfect play)
+    /// 2 stars: moves <= cupCount * 2
+    /// 1 star: moves > cupCount * 2
+    /// </summary>
+    public int CalculateStarRating()
+    {
+        if (cupCount <= 0) return 1;
+
+        if (moves <= cupCount)
+            return 3;
+        else if (moves <= cupCount * 2)
+            return 2;
+        else
+            return 1;
+    }
 
     private void Awake()
     {

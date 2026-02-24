@@ -28,6 +28,9 @@ public class SceneSetup : MonoBehaviour
     {
         Shuffle(inside);
         Shuffle(outside);
+
+        // Set cup count for star rating calculation
+        GameManager.Instance.cupCount = outside.Count;
         foreach(GameObject insideCup in inside)
         {
             Instantiate(insideCup, new Vector3(posInside[insideCups].x,posInside[insideCups].y), Quaternion.identity, inCup);

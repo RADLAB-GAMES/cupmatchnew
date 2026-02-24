@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
     TextMeshProUGUI amountCorrect;
     [SerializeField]
     GameObject cont;
+    [SerializeField]
+    TextMeshProUGUI starRating;
 
 
     void Awake()
@@ -38,9 +40,9 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.coolOff = false;
         GameManager.Instance.moves = 0;
         GameManager.Instance.correctMatches = 0;
+        GameManager.Instance.cupCount = 0;
         GameManager.Instance.clickedOn.Clear();
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        
     }
 
     public void ContinueUpdate()
@@ -68,7 +70,17 @@ public class UIManager : MonoBehaviour
             if (cont != null)
                 cont.SetActive(true);
             moves.text = "You Won in " + GameManager.Instance.moves + " moves!";
+            DisplayStarRating();
         }
+    }
+
+    void DisplayStarRating()
+    {
+        if (starRating == null) return;
+
+        int stars = GameManager.Instance.CalculateStarRating();
+        starRating.enabled = true;
+        starRating.text = new string('*', stars) + new string('*', 3 - stars);
     }
 
     public void StartGame()
