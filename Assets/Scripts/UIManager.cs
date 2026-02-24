@@ -38,6 +38,7 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.coolOff = false;
         GameManager.Instance.moves = 0;
         GameManager.Instance.correctMatches = 0;
+        GameManager.Instance.clickedOn.Clear();
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         
     }
@@ -51,6 +52,7 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.moves = 0;
         GameManager.Instance.correctMatches = 0;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        GameManager.Instance.UpdateGameState(GameState.Trying);
     }
 
     void ShowScore(GameState state)
@@ -63,7 +65,8 @@ public class UIManager : MonoBehaviour
         else if (state == GameState.Win)
         {
             // show continue button
-            cont.SetActive(true);
+            if (cont != null)
+                cont.SetActive(true);
             moves.text = "You Won in " + GameManager.Instance.moves + " moves!";
         }
     }
