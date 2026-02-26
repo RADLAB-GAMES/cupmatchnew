@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 public class UIManager : MonoBehaviour
@@ -10,8 +11,9 @@ public class UIManager : MonoBehaviour
     TextMeshProUGUI amountCorrect;
     [SerializeField]
     GameObject cont;
-    [SerializeField]
-    TextMeshProUGUI starRating;
+    [SerializeField] Image[] starImages;
+    [SerializeField] Sprite starFilled;
+    [SerializeField] Sprite starEmpty;
 
 
     void Awake()
@@ -23,9 +25,14 @@ public class UIManager : MonoBehaviour
     {
         // hide continue button until win state
         cont.SetActive(false);
+
+        // make stars transparent until win screen
+        if (starImages != null)
+            foreach (Image star in starImages)
+                star.color = Color.clear;
     }
 
-    void ODestroy()
+    void OnDestroy()
     {
         GameManager.OnGameStateChange -= ShowScore;
     }
@@ -76,11 +83,14 @@ public class UIManager : MonoBehaviour
 
     void DisplayStarRating()
     {
-        if (starRating == null) return;
+        if (starImages == null) return;
 
         int stars = GameManager.Instance.CalculateStarRating();
-        starRating.enabled = true;
-        starRating.text = new string('*', stars) + new string('*', 3 - stars);
+        for (int i = 0; i < starImages.Length; i++)
+        {
+            starImages[i].color = Color.white;
+            starImages[i].sprite = i < stars ? starFilled : starEmpty;
+        }
     }
 
     public void StartGame()
