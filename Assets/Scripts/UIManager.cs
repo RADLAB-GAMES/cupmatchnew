@@ -25,7 +25,7 @@ public class UIManager : MonoBehaviour
         cont.SetActive(false);
     }
 
-    void ODestroy()
+    void OnDestroy()
     {
         GameManager.OnGameStateChange -= ShowScore;
     }
@@ -80,7 +80,7 @@ public class UIManager : MonoBehaviour
 
         int stars = GameManager.Instance.CalculateStarRating();
         starRating.enabled = true;
-        starRating.text = new string('*', stars) + new string('*', 3 - stars);
+        starRating.text = new string('*', stars) + new string('-', 3 - stars);
     }
 
     public void StartGame()
