@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
     TextMeshProUGUI amountCorrect;
     [SerializeField]
     GameObject cont;
+    [SerializeField]
+    GameObject reset;
+    [SerializeField]
+    GameObject check;
     [SerializeField] Image[] starImages;
     [SerializeField] Sprite starFilled;
     [SerializeField] Sprite starEmpty;
@@ -77,6 +81,8 @@ public class UIManager : MonoBehaviour
             if (cont != null)
                 cont.SetActive(true);
             moves.text = "You Won in " + GameManager.Instance.moves + " moves!";
+            reset.SetActive(false);
+            check.SetActive(false);
             DisplayStarRating();
         }
     }

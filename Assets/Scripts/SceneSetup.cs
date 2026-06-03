@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
+using TMPro;
 
 public class SceneSetup : MonoBehaviour
 {
@@ -11,6 +9,8 @@ public class SceneSetup : MonoBehaviour
     Transform inCup, outCup;
     readonly List<(float x, float y)> posOutside = new() {(-3f,0f),(-1f,0f),(1f,0),(3f,0f)};
     readonly List<(float x, float y)> posInside = new() {(-3f,-2.5f),(-1f,-2.5f),(1f,-2.5f),(3f,-2.5f)};
+    [SerializeField]
+    TextMeshProUGUI levelDisplay;
 
     int insideCups, outsideCups = 0;
     // Fisher-Yates shuffle algorithm
@@ -26,6 +26,7 @@ public class SceneSetup : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        levelDisplay.text = "Level: " + GameManager.Instance.level.ToString();
         Shuffle(inside);
         Shuffle(outside);
 
