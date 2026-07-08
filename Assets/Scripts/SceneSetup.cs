@@ -34,11 +34,23 @@ public class SceneSetup : MonoBehaviour
         GameManager.Instance.cupCount = outside.Count;
         foreach(GameObject insideCup in inside)
         {
+            if (insideCup == null)
+            {
+                Debug.LogWarning($"Missing inside cup prefab at index {insideCups} on {name}; skipping.");
+                insideCups++;
+                continue;
+            }
             Instantiate(insideCup, new Vector3(posInside[insideCups].x,posInside[insideCups].y), Quaternion.identity, inCup);
             insideCups++;
         }
         foreach(GameObject outsideCup in outside)
         {
+            if (outsideCup == null)
+            {
+                Debug.LogWarning($"Missing outside cup prefab at index {outsideCups} on {name}; skipping.");
+                outsideCups++;
+                continue;
+            }
             Instantiate(outsideCup, new Vector3(posOutside[outsideCups].x,posOutside[outsideCups].y), outsideCup.transform.rotation, outCup);
             outsideCups++;
         }

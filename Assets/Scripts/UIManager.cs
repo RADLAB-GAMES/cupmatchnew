@@ -28,7 +28,8 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         // hide continue button until win state
-        cont.SetActive(false);
+        if (cont != null)
+            cont.SetActive(false);
 
         // make stars transparent until win screen
         if (starImages != null)
@@ -81,8 +82,10 @@ public class UIManager : MonoBehaviour
             if (cont != null)
                 cont.SetActive(true);
             moves.text = "You Won in " + GameManager.Instance.moves + " moves!";
-            reset.SetActive(false);
-            check.SetActive(false);
+            if (reset != null)
+                reset.SetActive(false);
+            if (check != null)
+                check.SetActive(false);
             DisplayStarRating();
         }
     }
