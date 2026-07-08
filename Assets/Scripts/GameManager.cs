@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public int level;
     public int moves;
     public bool coolOff = false;
+    public bool isSwapping = false;
     public List<GameObject> clickedOn = new();
     public int correctMatches = 0;
     public int cupCount = 0;

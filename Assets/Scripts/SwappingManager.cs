@@ -45,12 +45,28 @@ public class SwappingManager : MonoBehaviour
         
     }
 
+    private int rotationsPending = 0;
+
     public void Swap()
     {
+        var cupA = GameManager.Instance.clickedOn[0];
+        var cupB = GameManager.Instance.clickedOn[1];
+        Vector3 posA = cupA.transform.position;
+        Vector3 posB = cupB.transform.position;
+
         // use this as midpoint to create pivot point to revolve objects
-        var objDistance = (GameManager.Instance.clickedOn[0].transform.position + GameManager.Instance.clickedOn[1].transform.position) / 2;
-        StartCoroutine(RotateTimed(0.5f, GameManager.Instance.clickedOn[0], objDistance));
-        StartCoroutine(RotateTimed(.5f, GameManager.Instance.clickedOn[1], objDistance));
+        var objDistance = (posA + posB) / 2;
+
+        // A 180-degree revolve around the midpoint of A and B lands each cup exactly
+        // on the other's starting x/z; compute that analytically instead of trusting
+        // the float accumulation from many small RotateAround steps, which drifts.
+        Vector3 targetA = new Vector3(posB.x, posA.y - 0.25f, posB.z);
+        Vector3 targetB = new Vector3(posA.x, posB.y - 0.25f, posA.z);
+
+        GameManager.Instance.isSwapping = true;
+        rotationsPending = 2;
+        StartCoroutine(RotateTimed(0.5f, cupA, objDistance, targetA));
+        StartCoroutine(RotateTimed(.5f, cupB, objDistance, targetB));
         SwapListPos();
         GameManager.Instance.clickedOn.Clear();
         GameManager.Instance.coolOff = false;
@@ -58,7 +74,7 @@ public class SwappingManager : MonoBehaviour
         //GameManager.Instance.UIManager.MoveCountUpdate();
     }
 
-    IEnumerator RotateTimed(float duration, GameObject clicked, Vector3 objDistance)
+    IEnumerator RotateTimed(float duration, GameObject clicked, Vector3 objDistance, Vector3 targetPosition)
     {
         float timer = 0f;
         float startAngle = 0f;
@@ -78,8 +94,14 @@ public class SwappingManager : MonoBehaviour
 
             yield return null;
         }
-        // set cups back down
-        clicked.transform.position = new Vector3(clicked.transform.position.x, clicked.transform.position.y - 0.25f);
+        // snap to the exact target slot to eliminate drift accumulated during rotation
+        clicked.transform.position = targetPosition;
+
+        rotationsPending--;
+        if (rotationsPending <= 0)
+        {
+            GameManager.Instance.isSwapping = false;
+        }
     }
 
     public void SwapListPos()

@@ -59,13 +59,22 @@ public class UIManager : MonoBehaviour
 
     public void ContinueUpdate()
     {
-        // TODO: Need a way to change levels difficulty according to level number 
+        // TODO: Need a way to change levels difficulty according to level number
         // if GameManager.Instance.level < 4 3 cups...
         GameManager.Instance.level++;
         GameManager.Instance.coolOff = false;
         GameManager.Instance.moves = 0;
         GameManager.Instance.correctMatches = 0;
+
+        // Wait for the new scene's objects to Awake (and subscribe to OnGameStateChange)
+        // before firing Trying, instead of firing it on this scene's subscribers mid-teardown.
+        SceneManager.sceneLoaded += OnNextLevelLoaded;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void OnNextLevelLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnNextLevelLoaded;
         GameManager.Instance.UpdateGameState(GameState.Trying);
     }
 
