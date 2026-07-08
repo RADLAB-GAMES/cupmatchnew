@@ -11,6 +11,8 @@ public class ObjectHandler : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (GameManager.Instance.isSwapping) return;
+
         if (GameManager.Instance.clickedOn.Count == 0)
         {
             GameManager.Instance.clickedOn.Add(this.gameObject);
