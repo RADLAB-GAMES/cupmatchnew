@@ -66,6 +66,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1829c08d5ffc944969a1fc3bf06a59f0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8682646570311379927}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1829c08d5ffc944969a1fc3bf06a59f0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3071812810482837839}
   m_SourcePrefab: {fileID: 100100000, guid: 1829c08d5ffc944969a1fc3bf06a59f0, type: 3}
 --- !u!1 &1592271733707560321 stripped
 GameObject:
@@ -105,3 +108,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03252d0f169a24b14990f1b3676c2ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectHandler
+--- !u!114 &-3071812810482837839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592271733707560321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47d52104c3aca4ac18c46586bd99b55f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cup
+  id: 0

@@ -106,8 +106,10 @@ public class SwappingManager : MonoBehaviour
 
     public void SwapListPos()
     {
-        int indexA = ss.outside.FindIndex(c => c.GetComponent<Renderer>().sharedMaterial == GameManager.Instance.clickedOn[0].GetComponent<Renderer>().sharedMaterial);
-        int indexB = ss.outside.FindIndex(c=> c.GetComponent<Renderer>().sharedMaterial == GameManager.Instance.clickedOn[1].GetComponent<Renderer>().sharedMaterial);
+        int idA = GameManager.Instance.clickedOn[0].GetComponent<Cup>().id;
+        int idB = GameManager.Instance.clickedOn[1].GetComponent<Cup>().id;
+        int indexA = ss.outside.FindIndex(c => c.GetComponent<Cup>().id == idA);
+        int indexB = ss.outside.FindIndex(c => c.GetComponent<Cup>().id == idB);
 
         if (indexA == -1 || indexB == -1)
         {
@@ -127,14 +129,14 @@ public class SwappingManager : MonoBehaviour
 
             GameManager.Instance.coolOff = true;
 
-            // Compare outside cups with inside cups by material
+            // Compare outside cups with inside cups by id
             bool isMatch = true;
             for (int i = 0; i < ss.outside.Count && i < ss.inside.Count; i++)
             {
-                var outsideMat = ss.outside[i].GetComponent<Renderer>().sharedMaterial;
-                var insideMat = ss.inside[i].GetComponent<Renderer>().sharedMaterial;
+                var outsideId = ss.outside[i].GetComponent<Cup>().id;
+                var insideId = ss.inside[i].GetComponent<Cup>().id;
 
-                if (outsideMat == insideMat)
+                if (outsideId == insideId)
                 {
                     GameManager.Instance.correctMatches++;
 
