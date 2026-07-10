@@ -12,7 +12,6 @@ public class SceneSetup : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI levelDisplay;
 
-    int insideCups, outsideCups = 0;
     // Fisher-Yates shuffle algorithm
     public static void Shuffle<T>(List<T> list)
     {
@@ -32,27 +31,27 @@ public class SceneSetup : MonoBehaviour
 
         // Set cup count for star rating calculation
         GameManager.Instance.cupCount = outside.Count;
-        foreach(GameObject insideCup in inside)
+        for (int i = 0; i < inside.Count; i++)
         {
+            GameObject insideCup = inside[i];
             if (insideCup == null)
             {
-                Debug.LogWarning($"Missing inside cup prefab at index {insideCups} on {name}; skipping.");
-                insideCups++;
+                Debug.LogWarning($"Missing inside cup prefab at index {i} on {name}; skipping.");
                 continue;
             }
-            Instantiate(insideCup, new Vector3(posInside[insideCups].x,posInside[insideCups].y), Quaternion.identity, inCup);
-            insideCups++;
+            // write the spawned instance back so downstream code (e.g. SwappingManager)
+            // operates on the live scene object, not the prefab asset
+            inside[i] = Instantiate(insideCup, new Vector3(posInside[i].x, posInside[i].y), Quaternion.identity, inCup);
         }
-        foreach(GameObject outsideCup in outside)
+        for (int i = 0; i < outside.Count; i++)
         {
+            GameObject outsideCup = outside[i];
             if (outsideCup == null)
             {
-                Debug.LogWarning($"Missing outside cup prefab at index {outsideCups} on {name}; skipping.");
-                outsideCups++;
+                Debug.LogWarning($"Missing outside cup prefab at index {i} on {name}; skipping.");
                 continue;
             }
-            Instantiate(outsideCup, new Vector3(posOutside[outsideCups].x,posOutside[outsideCups].y), outsideCup.transform.rotation, outCup);
-            outsideCups++;
+            outside[i] = Instantiate(outsideCup, new Vector3(posOutside[i].x, posOutside[i].y), outsideCup.transform.rotation, outCup);
         }
     }
 
