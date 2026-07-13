@@ -116,6 +116,18 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadSceneAsync(1);
     }
 
+    public void GoToMainMenu()
+    {
+        // GameManager persists across scenes, so clear the round state before leaving
+        GameManager.Instance.coolOff = false;
+        GameManager.Instance.isSwapping = false;
+        GameManager.Instance.moves = 0;
+        GameManager.Instance.correctMatches = 0;
+        GameManager.Instance.cupCount = 0;
+        GameManager.Instance.clickedOn.Clear();
+        SceneManager.LoadSceneAsync(0);
+    }
+
     public void CheckButton()
     {
         if (GameManager.Instance.coolOff == false)
