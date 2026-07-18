@@ -15,6 +15,14 @@ public class GameManager : MonoBehaviour
     public int correctMatches = 0;
     public int cupCount = 0;
 
+    // How many checks a player gets per level for free.
+    public int freeChecksPerLevel = 2;
+    // How many checks the player has used so far on the current level; resets each level.
+    public int checksUsedThisLevel = 0;
+    // Extra checks bought via monetization; persists across levels and is only spent once
+    // the free-per-level allowance runs out.
+    public int bonusChecks = 0;
+
     /// <summary>
     /// Calculates star rating based on moves and cup count.
     /// 3 stars: moves <= cupCount (perfect/near-perfect play)
@@ -31,6 +39,32 @@ public class GameManager : MonoBehaviour
             return 2;
         else
             return 1;
+    }
+
+    public bool HasChecksRemaining()
+    {
+        return checksUsedThisLevel < freeChecksPerLevel || bonusChecks > 0;
+    }
+
+    public int RemainingChecks()
+    {
+        return Mathf.Max(0, freeChecksPerLevel - checksUsedThisLevel) + bonusChecks;
+    }
+
+    // Spends one check: consumes a bonus check once the free allowance is used up, and
+    // detracts from the player's score the same way a wasted move does.
+    public void UseCheck()
+    {
+        if (checksUsedThisLevel >= freeChecksPerLevel)
+            bonusChecks = Mathf.Max(0, bonusChecks - 1);
+
+        checksUsedThisLevel++;
+        moves++;
+    }
+
+    public void ResetChecksForLevel()
+    {
+        checksUsedThisLevel = 0;
     }
 
     private void Awake()

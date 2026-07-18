@@ -152,7 +152,6 @@ public class SwappingManager : MonoBehaviour
             }
             else
             {
-                GameManager.Instance.moves++;
                 GameManager.Instance.UpdateGameState(GameState.Trying);
             }
         }
