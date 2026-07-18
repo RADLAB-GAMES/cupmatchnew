@@ -41,6 +41,15 @@ public class GameManager : MonoBehaviour
             return 1;
     }
 
+    // Ramps cup count up over the first few levels, then holds at the max available
+    // (there are only 4 colors of cup art, so this can't scale past 4).
+    public int GetCupCountForLevel(int level)
+    {
+        if (level <= 1) return 2;
+        if (level <= 3) return 3;
+        return 4;
+    }
+
     public bool HasChecksRemaining()
     {
         return checksUsedThisLevel < freeChecksPerLevel || bonusChecks > 0;
