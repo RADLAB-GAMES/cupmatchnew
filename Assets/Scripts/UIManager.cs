@@ -64,8 +64,6 @@ public class UIManager : MonoBehaviour
 
     public void ContinueUpdate()
     {
-        // TODO: Need a way to change levels difficulty according to level number
-        // if GameManager.Instance.level < 4 3 cups...
         GameManager.Instance.level++;
         GameManager.Instance.coolOff = false;
         GameManager.Instance.moves = 0;
@@ -101,6 +99,8 @@ public class UIManager : MonoBehaviour
                 reset.SetActive(false);
             if (check != null)
                 check.SetActive(false);
+            if (remainingChecks != null)
+                remainingChecks.enabled = false;
             DisplayStarRating();
         }
     }
@@ -146,6 +146,11 @@ public class UIManager : MonoBehaviour
 
             GameManager.Instance.UseCheck();
             GameManager.Instance.UpdateGameState(GameState.Check);
+
+            // Checking can synchronously trigger a win (SwappingManager.Check), which already
+            // hid the check UI via ShowScore(Win); don't let the rest of this method undo that.
+            if (GameManager.Instance.State == GameState.Win)
+                return;
 
             amountCorrect.enabled = showAmount;
             if (showAmount)

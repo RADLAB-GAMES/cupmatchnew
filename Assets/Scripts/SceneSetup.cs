@@ -1,14 +1,18 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 
 public class SceneSetup : MonoBehaviour
 {
+    // Master pool of all available color pairs (matched by index: inside[i] and outside[i] are the same color).
+    // Each level uses only a subset of these, sized by GameManager.GetCupCountForLevel.
     public List<GameObject> inside, outside;
     [SerializeField]
     Transform inCup, outCup;
-    readonly List<(float x, float y)> posOutside = new() {(-3f,0f),(-1f,0f),(1f,0),(3f,0f)};
-    readonly List<(float x, float y)> posInside = new() {(-3f,-2.5f),(-1f,-2.5f),(1f,-2.5f),(3f,-2.5f)};
+    const float cupSpacing = 2f;
+    const float outsideY = 0f;
+    const float insideY = -2.5f;
     [SerializeField]
     TextMeshProUGUI levelDisplay;
 
@@ -22,15 +26,42 @@ public class SceneSetup : MonoBehaviour
             (list[j], list[i]) = (list[i], list[j]);
         }
     }
+
+    // Evenly spaces `count` cups along the x-axis, centered on x=0.
+    static List<(float x, float y)> GeneratePositions(int count, float y)
+    {
+        var positions = new List<(float, float)>(count);
+        float startX = -(count - 1) * cupSpacing / 2f;
+        for (int i = 0; i < count; i++)
+            positions.Add((startX + i * cupSpacing, y));
+        return positions;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         levelDisplay.text = "Level: " + GameManager.Instance.level.ToString();
+
+        int cupCount = Mathf.Clamp(
+            GameManager.Instance.GetCupCountForLevel(GameManager.Instance.level),
+            1, Mathf.Min(inside.Count, outside.Count));
+
+        // Pick which color pairs are in play this level, keeping inside/outside aligned by index.
+        var colorIndices = Enumerable.Range(0, Mathf.Min(inside.Count, outside.Count)).ToList();
+        Shuffle(colorIndices);
+        colorIndices = colorIndices.Take(cupCount).ToList();
+        inside = colorIndices.Select(i => inside[i]).ToList();
+        outside = colorIndices.Select(i => outside[i]).ToList();
+
         Shuffle(inside);
         Shuffle(outside);
 
         // Set cup count for star rating calculation
-        GameManager.Instance.cupCount = outside.Count;
+        GameManager.Instance.cupCount = cupCount;
+
+        var posInside = GeneratePositions(cupCount, insideY);
+        var posOutside = GeneratePositions(cupCount, outsideY);
+
         for (int i = 0; i < inside.Count; i++)
         {
             GameObject insideCup = inside[i];
