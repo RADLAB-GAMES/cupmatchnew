@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI amountCorrect;
     [SerializeField]
+    TextMeshProUGUI remainingChecks;
+    [SerializeField]
     GameObject cont;
     [SerializeField]
     GameObject reset;
@@ -35,6 +37,8 @@ public class UIManager : MonoBehaviour
         if (starImages != null)
             foreach (Image star in starImages)
                 star.color = Color.clear;
+
+        UpdateRemainingChecksText();
     }
 
     void OnDestroy()
@@ -54,6 +58,7 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.correctMatches = 0;
         GameManager.Instance.cupCount = 0;
         GameManager.Instance.clickedOn.Clear();
+        GameManager.Instance.ResetChecksForLevel();
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -65,6 +70,7 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.coolOff = false;
         GameManager.Instance.moves = 0;
         GameManager.Instance.correctMatches = 0;
+        GameManager.Instance.ResetChecksForLevel();
 
         // Wait for the new scene's objects to Awake (and subscribe to OnGameStateChange)
         // before firing Trying, instead of firing it on this scene's subscribers mid-teardown.
@@ -125,6 +131,7 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.correctMatches = 0;
         GameManager.Instance.cupCount = 0;
         GameManager.Instance.clickedOn.Clear();
+        GameManager.Instance.ResetChecksForLevel();
         SceneManager.LoadSceneAsync(0);
     }
 
@@ -132,9 +139,29 @@ public class UIManager : MonoBehaviour
     {
         if (GameManager.Instance.coolOff == false)
         {
+            // Whether this use still falls within the free/bonus allowance, decided
+            // before it's spent so the free checks (and any purchased bonus ones)
+            // are the ones that reveal the number.
+            bool showAmount = GameManager.Instance.HasChecksRemaining();
+
+            GameManager.Instance.UseCheck();
             GameManager.Instance.UpdateGameState(GameState.Check);
-            amountCorrect.enabled = true;
-            amountCorrect.text =  "Amount Correct: " + GameManager.Instance.correctMatches.ToString();
+
+            amountCorrect.enabled = showAmount;
+            if (showAmount)
+                amountCorrect.text = "Amount Correct: " + GameManager.Instance.correctMatches.ToString();
+
+            UpdateRemainingChecksText();
         }
+    }
+
+    void UpdateRemainingChecksText()
+    {
+        if (remainingChecks == null) return;
+
+        // Was duplicated from amountCorrect, which starts disabled until CheckButton
+        // enables it; force it on so it doesn't need a manual toggle in the Inspector.
+        remainingChecks.enabled = true;
+        remainingChecks.text = "Remaining Checks: " + GameManager.Instance.RemainingChecks();
     }
 }
